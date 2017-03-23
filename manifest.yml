@@ -1,0 +1,8 @@
+---
+applications:
+ - name: alice-api
+   host: alice
+   path: target/alice-api.war
+   disk_quota: 512M
+   memory: 512M
+   instances: 1

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alice</title>
+
+<!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Alice API</h1>
+    <p id="endpoints" class="lead text-center"></p>
+  </div>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script>
+  //Retreive all the visitors from the database
+  function getServices() {
+    $.get("./api/endpoints").done(
+      function(data) {
+        if (data.length > 0) {
+          $('#endpoints').html(
+            "endpoints: " + JSON.stringify(data));
+          }
+        });
+    }
+
+  //Call getNames on page load.
+  getServices();
+  </script>
+</body>
+
+</html>
