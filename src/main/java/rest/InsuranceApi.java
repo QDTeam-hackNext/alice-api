@@ -22,9 +22,11 @@ import data.AnalysisInput;
 import data.AnalysisOutput;
 import data.ConversationInput;
 import data.DataAccessOutput;
+import data.PoliciesInput;
 import data.QuoteOutput;
 import service.AliceConv;
 import service.AliceNlu;
+import service.AlicePolicy;
 
 @ApplicationPath("api")
 @Path("/")
@@ -32,6 +34,7 @@ public class InsuranceApi extends Application {
   private final Gson gson = new Gson();
   private final AliceNlu aliceNlu = new AliceNlu();
   private final AliceConv aliceConv = new AliceConv();
+  private final AlicePolicy policies = new AlicePolicy();
 
   @GET
   @Path("endpoints/")
@@ -62,6 +65,14 @@ public class InsuranceApi extends Application {
     fields.put("occupation", "designer");
     fields.put("marital-status", "single");
     return gson.toJson(new AnalysisOutput(fields));
+  }
+
+  @POST
+  @Path("policies/")
+  @Consumes({"application/json"})
+  @Produces({"application/json"})
+  public String policies(PoliciesInput input) {
+    return gson.toJson(policies.getPoliciesForUser(input.getUserId(), input.isIncludeQuotes()));
   }
 
   @POST
