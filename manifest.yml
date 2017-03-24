@@ -6,3 +6,7 @@ applications:
    disk_quota: 512M
    memory: 512M
    instances: 1
+   buildpack: liberty-for-java_v3_7-20170118-2046
+   services:
+   - Alice-NLU
+   - Alice-CONV
