@@ -12,8 +12,27 @@ import org.joda.time.format.ISODateTimeFormat;
 import com.google.common.collect.ImmutableList;
 
 import data.Policy;
+import data.QuickQuoteInput;
+import data.QuickQuoteResult;
+import service.Network.Result;
 
 public class AlicePolicy {
+  private final Network network;
+
+  public AlicePolicy() {
+    this.network = new Network();
+  }
+
+  public QuickQuoteResult quickQuote(QuickQuoteInput input) {
+    Result<QuickQuoteResult> result = network.post(
+        "https://www.allianz.de/oneweb/ajax/aspro/multiofferlebenservice/quickquote", input, QuickQuoteResult.class);
+    if (result.ok) {
+      return result.value;
+    }
+
+    throw new RuntimeException("Getting quick quote failed");
+  }
+
   public List<Policy> getPoliciesForUser(String userId, boolean includeQuotes) {
     // stub couple of policies and quotes that user has
     return ImmutableList.<Policy>builder()

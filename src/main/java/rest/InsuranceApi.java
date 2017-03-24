@@ -16,13 +16,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import data.AnalysisInput;
 import data.AnalysisOutput;
 import data.ConversationInput;
 import data.DataAccessOutput;
 import data.PoliciesInput;
+import data.QuickQuoteInput;
+import data.QuickQuoteResult;
 import data.QuoteOutput;
 import service.AliceConv;
 import service.AliceNlu;
@@ -31,7 +35,7 @@ import service.AlicePolicy;
 @ApplicationPath("api")
 @Path("/")
 public class InsuranceApi extends Application {
-  private final Gson gson = new Gson();
+  private final Gson gson = QuickQuoteResult.registerSerializer(new GsonBuilder()).create();
   private final AliceNlu aliceNlu = new AliceNlu();
   private final AliceConv aliceConv = new AliceConv();
   private final AlicePolicy policies = new AlicePolicy();
@@ -73,6 +77,18 @@ public class InsuranceApi extends Application {
   @Produces({"application/json"})
   public String policies(PoliciesInput input) {
     return gson.toJson(policies.getPoliciesForUser(input.getUserId(), input.isIncludeQuotes()));
+  }
+
+  @POST
+  @Path("policies/quick_quote")
+  @Consumes({"application/json"})
+  @Produces({"application/json"})
+  public String policies(QuickQuoteInput input) {
+    // hack default occupation for now
+    if (Strings.isNullOrEmpty(input.getData().getOccupation())) {
+      input.getData().setOccupation("Industriekaufmann, Industriekauffrau");
+    }
+    return gson.toJson(policies.quickQuote(input));
   }
 
   @POST
