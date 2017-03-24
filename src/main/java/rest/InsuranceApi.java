@@ -6,7 +6,6 @@ package rest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
@@ -18,11 +17,11 @@ import javax.ws.rs.core.Application;
 
 import com.google.common.base.Joiner;
 import com.google.gson.Gson;
-import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 
 import data.AnalysisInput;
 import data.AnalysisOutput;
 import data.ConversationInput;
+import data.DataAccessOutput;
 import data.QuoteOutput;
 import service.AliceConv;
 import service.AliceNlu;
@@ -47,7 +46,7 @@ public class InsuranceApi extends Application {
   @Consumes({"application/json"})
   @Produces({"application/json"})
   public String dataAccessConversation(ConversationInput input) {
-    Entry<String, MessageResponse> response = aliceConv.dataAccess(input.getInput(), input.getId());
+    DataAccessOutput response = aliceConv.dataAccess(input.getInput(), input.getId());
     return gson.toJson(response);
   }
 
