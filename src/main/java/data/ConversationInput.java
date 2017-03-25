@@ -7,9 +7,6 @@ public class ConversationInput {
   private String id;
   private String input;
 
-  public ConversationInput() {
-  }
-
   public String getId() {
     return id;
   }

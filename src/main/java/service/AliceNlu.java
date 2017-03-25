@@ -3,15 +3,14 @@
  */
 package service;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.NaturalLanguageUnderstanding;
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.AnalysisResults;
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.AnalyzeOptions;
+import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.EntitiesOptions;
+import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.EntitiesResult;
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.Features;
-import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.KeywordsOptions;
-import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.KeywordsResult;
 
 public class AliceNlu extends AliceWatsonService<NaturalLanguageUnderstanding> {
   public AliceNlu() {
@@ -21,17 +20,14 @@ public class AliceNlu extends AliceWatsonService<NaturalLanguageUnderstanding> {
         "https://gateway.watsonplatform.net/natural-language-understanding/api");
   }
 
-  public ImmutableList<String> keywords(String input) {
-    KeywordsOptions keywords = new KeywordsOptions.Builder().emotion(false).build();
-    Features features = new Features.Builder().keywords(keywords).build();
+  public List<EntitiesResult> entities(String input) {
+    EntitiesOptions entities = new EntitiesOptions.Builder()
+        .sentiment(false)
+        .build();
+    Features features = new Features.Builder().entities(entities).build();
     AnalyzeOptions options = new AnalyzeOptions.Builder().features(features).text(input).returnAnalyzedText(false)
         .build();
     AnalysisResults results = service.analyze(options).execute();
-    return FluentIterable.from(results.getKeywords()).transform(new Function<KeywordsResult, String>() {
-      @Override
-      public String apply(KeywordsResult input) {
-        return input.getText();
-      }
-    }).toList();
+    return results.getEntities();
   }
 }

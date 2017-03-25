@@ -7,10 +7,6 @@ public class PoliciesInput {
   private String userId;
   private boolean includeQuotes;
 
-  public PoliciesInput() {
-    
-  }
-
   public String getUserId() {
     return userId;
   }

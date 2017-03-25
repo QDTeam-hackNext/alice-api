@@ -9,9 +9,6 @@ public class AnalysisInput {
   private String raw;
   private List<String> expected;
 
-  public AnalysisInput() {
-  }
-
   public String getRaw() {
     return raw;
   }
