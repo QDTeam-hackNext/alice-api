@@ -79,7 +79,7 @@ class Network {
   }
 
   static class RequestBuilder {
-    private enum Method {POST, GET}
+    enum Method {POST, GET}
 
     private final Method method;
     private final String url;
@@ -96,7 +96,7 @@ class Network {
     }
 
     static RequestBuilder get(String url) {
-      return new RequestBuilder(Method.POST, url);
+      return new RequestBuilder(Method.GET, url);
     }
 
     RequestBuilder withJsonBody(String body) {
