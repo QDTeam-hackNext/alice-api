@@ -84,10 +84,7 @@ public class InsuranceApi extends Application {
     String keywords = "";
     List<String> required = new ArrayList<>(input.getRequired());
     ImmutableMap.Builder<String, Object> builder =
-        ImmutableMap.<String, Object>builder();
-    if (!Strings.isNullOrEmpty(input.getUsername())) {
-      builder = builder.put("username", input.getUsername());
-    }
+        ImmutableMap.<String, Object>builder().put("username", Strings.nullToEmpty(input.getUsername()));
 
     //perform input text analysis
     PersonalDataOutput result;
