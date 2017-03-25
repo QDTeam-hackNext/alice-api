@@ -50,7 +50,7 @@ public class AliceConv extends AliceWatsonService<ConversationService> {
         .transform(new Function<Entity, PersonalDataOutput.Field>() {
           @Override
           public PersonalDataOutput.Field apply(Entity input) {
-            return new PersonalDataOutput.Field(input.getEntity(), input.getValue());
+            return new PersonalDataOutput.Field(input.getEntity().toLowerCase(), input.getValue().toLowerCase());
           }
         }).toList();
     return new PersonalDataOutput(msg.getKey(), msg.getValue().getTextConcatenated(" "), fields, false);

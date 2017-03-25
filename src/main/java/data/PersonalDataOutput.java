@@ -4,6 +4,7 @@
 package data;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.google.common.base.MoreObjects;
 
@@ -20,6 +21,22 @@ public class PersonalDataOutput {
     @Override
     public String toString() {
       return MoreObjects.toStringHelper(this).add("name", name).add("value", value).toString();
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(name, value);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (obj instanceof Field) {
+        Field other = (Field) obj;
+        return Objects.equals(name, other.name)
+            && Objects.equals(value, other.value);
+      }
+
+      return false;
     }
   }
 
