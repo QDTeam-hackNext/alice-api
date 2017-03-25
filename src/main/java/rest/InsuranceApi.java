@@ -15,8 +15,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -25,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.EntitiesResult;
 
+import application.JsonTracer;
 import data.ConversationInput;
 import data.DataAccessOutput;
 import data.PersonalDataConversationInput;
@@ -33,7 +36,6 @@ import data.PersonalDataOutput.Field;
 import data.PoliciesInput;
 import data.QuickQuoteInput;
 import data.QuickQuoteResult;
-import data.QuoteOutput;
 import service.AliceConv;
 import service.AliceNlu;
 import service.AlicePolicy;
@@ -41,6 +43,8 @@ import service.AlicePolicy;
 @ApplicationPath("api")
 @Path("/")
 public class InsuranceApi extends Application {
+  private static final Logger LOG = LoggerFactory.getLogger(InsuranceApi.class);
+
   private final Gson gson = QuickQuoteResult.registerSerializer(new GsonBuilder()).setPrettyPrinting().create();
   private final AliceNlu aliceNlu = new AliceNlu();
   private final AliceConv aliceConv = new AliceConv();
@@ -60,6 +64,7 @@ public class InsuranceApi extends Application {
   @Consumes({"application/json"})
   @Produces({"application/json"})
   public String dataAccessConversation(ConversationInput input) {
+    LOG.debug("Input value: {}", new JsonTracer(input));
     DataAccessOutput response = aliceConv.dataAccess(input.getInput(), input.getId());
     return gson.toJson(response);
   }
@@ -69,7 +74,7 @@ public class InsuranceApi extends Application {
   @Consumes({"application/json"})
   @Produces({"application/json"})
   public String personalDataConversation(PersonalDataConversationInput input) {
-    System.out.println("PDC: " + gson.toJson(input));
+    LOG.debug("Input value: {}", new JsonTracer(input));
     List<PersonalDataOutput.Field> fields = Collections.emptyList();
     List<String> required = new ArrayList<>(input.getRequired());
     ImmutableMap.Builder<String, Object> builder =
@@ -95,8 +100,6 @@ public class InsuranceApi extends Application {
             }).toList();
       }
 
-      System.out.println("Required: " + Joiner.on(',').join(required));
-      System.out.println("Fields: " + Joiner.on(',').join(fields));
       markFound(fields, required);
       if (required.isEmpty()) {
         return gson.toJson(PersonalDataOutput.collected(fields));
@@ -120,6 +123,7 @@ public class InsuranceApi extends Application {
   @Consumes({"application/json"})
   @Produces({"application/json"})
   public String policies(PoliciesInput input) {
+    LOG.debug("Input value: {}", new JsonTracer(input));
     return gson.toJson(policies.getPoliciesForUser(input.getUserId(), input.isIncludeQuotes()));
   }
 
@@ -128,19 +132,12 @@ public class InsuranceApi extends Application {
   @Consumes({"application/json"})
   @Produces({"application/json"})
   public String quickQuote(QuickQuoteInput input) {
+    LOG.debug("Input value: {}", new JsonTracer(input));
     // hack default occupation for now
     if (Strings.isNullOrEmpty(input.getData().getOccupation())) {
       input.getData().setOccupation("Designer(in)");
     }
     return gson.toJson(policies.quickQuote(input));
-  }
-
-  @POST
-  @Path("quote/")
-  @Consumes({"application/json"})
-  @Produces({"application/json"})
-  public String quote() {
-    return gson.toJson(new QuoteOutput("250"));
   }
 
   private void markFound(List<PersonalDataOutput.Field> fields, List<String> required) {

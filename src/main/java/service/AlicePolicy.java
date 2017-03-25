@@ -8,15 +8,20 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
 
+import application.JsonTracer;
 import data.Policy;
 import data.QuickQuoteInput;
 import data.QuickQuoteResult;
 import service.Network.Result;
 
 public class AlicePolicy {
+  private static final Logger LOG = LoggerFactory.getLogger(AlicePolicy.class);
+
   private final Network network;
 
   public AlicePolicy() {
@@ -30,6 +35,7 @@ public class AlicePolicy {
       return result.value;
     }
 
+    LOG.warn("Result failure: {}", new JsonTracer(result));
     throw new RuntimeException("Getting quick quote failed");
   }
 
