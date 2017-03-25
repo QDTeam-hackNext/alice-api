@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2017 QDTeam hackNEXT
  */
-package application;
+package utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -23,10 +23,10 @@ import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageRequest;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 
-import application.JsonTracer;
 import data.DataAccessOutput;
 import data.PersonalDataOutput;
 import data.PersonalDataOutput.Field;
+import utils.JsonTracer;
 
 public class AliceConv extends AliceWatsonService<ConversationService> {
   private static final Logger LOG = LoggerFactory.getLogger(AliceConv.class);

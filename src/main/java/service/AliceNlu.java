@@ -15,7 +15,7 @@ import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.En
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.EntitiesResult;
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.Features;
 
-import application.JsonTracer;
+import utils.JsonTracer;
 
 public class AliceNlu extends AliceWatsonService<NaturalLanguageUnderstanding> {
   private static final Logger LOG = LoggerFactory.getLogger(AliceNlu.class);

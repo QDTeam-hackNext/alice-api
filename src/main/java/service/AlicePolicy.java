@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
 
-import application.JsonTracer;
 import data.Policy;
 import data.QuickQuoteInput;
 import data.QuickQuoteResult;
 import service.Network.Result;
+import utils.JsonTracer;
 
 public class AlicePolicy {
   private static final Logger LOG = LoggerFactory.getLogger(AlicePolicy.class);

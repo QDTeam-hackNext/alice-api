@@ -27,7 +27,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.EntitiesResult;
 
-import application.JsonTracer;
 import data.ConversationInput;
 import data.DataAccessOutput;
 import data.PersonalDataConversationInput;
@@ -39,6 +38,7 @@ import data.QuickQuoteResult;
 import service.AliceConv;
 import service.AliceNlu;
 import service.AlicePolicy;
+import utils.JsonTracer;
 
 @ApplicationPath("api")
 @Path("/")
