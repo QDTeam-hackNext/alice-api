@@ -127,10 +127,10 @@ public class InsuranceApi extends Application {
   @Path("policies/quick_quote")
   @Consumes({"application/json"})
   @Produces({"application/json"})
-  public String policies(QuickQuoteInput input) {
+  public String quickQuote(QuickQuoteInput input) {
     // hack default occupation for now
     if (Strings.isNullOrEmpty(input.getData().getOccupation())) {
-      input.getData().setOccupation("Industriekaufmann, Industriekauffrau");
+      input.getData().setOccupation("Designer(in)");
     }
     return gson.toJson(policies.quickQuote(input));
   }
