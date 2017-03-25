@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -32,8 +33,8 @@ public class AliceConv extends AliceWatsonService<ConversationService> {
   private static final Logger LOG = LoggerFactory.getLogger(AliceConv.class);
   private static final String WORKSPACE_DATA_ACCESS = "89247bc0-0d49-40b0-a355-522145254f18";
   private static final String WORKSPACE_PERSONAL_DATA = "c33978ec-e370-484d-be94-2c4e1f18af0c";
-
-  private final Cache<String, Map<String, Object>> contexts;
+  private static final Cache<String, Map<String, Object>> contexts =
+      CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.MINUTES).build();
 
   public AliceConv() {
     super(new ConversationService(ConversationService.VERSION_DATE_2017_02_03),
@@ -41,7 +42,6 @@ public class AliceConv extends AliceWatsonService<ConversationService> {
         "buFTjfAGIaxQ",
         "https://gateway.watsonplatform.net/conversation/api");
     
-    contexts = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.MINUTES).build();
   }
 
   public PersonalDataOutput personalData(String input, String id, Map<String, Object> context) {
@@ -69,6 +69,7 @@ public class AliceConv extends AliceWatsonService<ConversationService> {
   private Entry<String, MessageResponse> message(String input, String id, String workspaceId,
       Map<String, Object> additionalContext) {
     Map<String, Object> context = mergeContext(id, additionalContext);
+    LOG.debug("Additional context [{}]", Joiner.on(',').join(context.entrySet()));
     MessageRequest.Builder builder = new MessageRequest.Builder();
     if (!Strings.isNullOrEmpty(input)) {
       builder.inputText(input);
@@ -87,18 +88,21 @@ public class AliceConv extends AliceWatsonService<ConversationService> {
   }
 
   private Map<String, Object> mergeContext(String id, Map<String, Object> additionalContext) {
+    LOG.debug("id: {}", id);
     if (Strings.isNullOrEmpty(id)) {
       return additionalContext;
     }
 
     Map<String, Object> existing = contexts.getIfPresent(id);
     if (existing == null) {
+      LOG.debug("Additional context is taken");
       return additionalContext;
     }
 
     if (additionalContext != null) {
       existing.putAll(additionalContext);
     }
+    LOG.debug("Existing context is being used");
     return existing;
   }
 }
