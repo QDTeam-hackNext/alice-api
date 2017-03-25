@@ -90,7 +90,7 @@ public class InsuranceApi extends Application {
             .add(new PersonalDataOutput.Field("healthy", "very healthy")) // no such entity has to be asked for
             .add(new PersonalDataOutput.Field("sport", "running")) // Sport NLU entity
             .build();
-      } else {
+      } else if (!Strings.isNullOrEmpty(input.getInput())) {
         fields = FluentIterable.from(aliceNlu.entities(input.getInput()))
             .transform(new Function<EntitiesResult, PersonalDataOutput.Field>() {
               @Override
